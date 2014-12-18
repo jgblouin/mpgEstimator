@@ -1,0 +1,74 @@
+---
+title       : Fuel Consumption Estimator
+subtitle    : MPG Estimator based on transmission type, car weight, HP and number of cylinders
+author      : J-G Blouin
+job         : 
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Introduction
+
+An application calculating gas consumption per mile is proposed.
+The user must select
+
+* Transmission type
+* Number of cylinders
+* Car weight (in 1000 lbs)
+* Horse Power
+
+A confidence interval can be selected, indicating a requested precision.
+
+---
+## How it works
+
+Caluculations are based on a linear model approximation relating MPG 
+to the selected variables. The model thus built is then used for interpolation.
+The Result tab contains 
+* the estimated value for MPG called fit 
+* the lower bound for the confidence interval, called lwr
+* the upper bound for the confidence interval, called upr
+
+The Plot tab contains a representation of the confidence interval.  
+
+The model is given by
+```{r, echo= TRUE}
+fit <- lm(mpg ~ factor(am) + wt + factor(cyl) + hp, data=mtcars)
+```
+
+---
+## The Data
+
+The data used to define the model comes from the mtcvars data set and looks like
+
+```{r, echo= FALSE}
+data(mtcars)
+head(mtcars)
+fit <- lm(mpg ~ factor(am) + wt + factor(cyl) + hp, data=mtcars)
+```
+where am is the transmission type:
+* 0 for automatic
+* 1 for manual
+
+---
+
+## The Model Summarized
+
+The residual standard error is given by
+```{r, echo= FALSE}
+summary(fit)$sigma
+```
+The F-statistic is given by
+```{r, echo= FALSE}
+summary(fit)$fstatistic
+```
+The multiple R-squared and adjusted R-squared are given respectively by
+```{r, echo= FALSE}
+summary(fit)$r.squared
+summary(fit)$adj.r.squared
+```
+And, lastly, the p-value is approximately null.
